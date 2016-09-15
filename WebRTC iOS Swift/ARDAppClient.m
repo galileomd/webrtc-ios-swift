@@ -49,7 +49,7 @@
 
 // TODO(tkchin): move these to a configuration object.
 static NSString *kARDRoomServerHostUrl =
-    @"https://apprtc.appspot.com";
+    @"http://192.168.1.66:8080";
 static NSString *kARDRoomServerRegisterFormat =
     @"%@/join/%@";
 static NSString *kARDRoomServerMessageFormat =
@@ -61,8 +61,7 @@ static NSString *kARDDefaultSTUNServerUrl =
     @"stun:stun.l.google.com:19302";
 // TODO(tkchin): figure out a better username for CEOD statistics.
 static NSString *kARDTurnRequestUrl =
-    @"https://computeengineondemand.appspot.com"
-    @"/turn?username=iapprtc&key=4080218913";
+    @"http://192.168.1.66:8080/ice";
 
 static NSString *kARDAppClientErrorDomain = @"ARDAppClient";
 static NSInteger kARDAppClientErrorUnknown = -1;
