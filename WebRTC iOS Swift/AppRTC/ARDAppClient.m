@@ -49,7 +49,7 @@
 
 // TODO(tkchin): move these to a configuration object.
 static NSString *kARDRoomServerHostUrl =
-    @"https://appr.tc";
+    @"https://video.artinvest52.ru";
 static NSString *kARDRoomServerRegisterFormat =
     @"%@/join/%@";
 static NSString *kARDRoomServerMessageFormat =
@@ -199,7 +199,7 @@ static NSInteger kARDAppClientErrorInvalidRoom = -7;
   // Register with room server.
   [self registerWithRoomServerForRoomId:roomId
                       completionHandler:^(ARDRegisterResponse *response) {
-    ARDAppClient *strongSelf = weakSelf;
+    //ARDAppClient *strongSelf = weakSelf;
     if (!response || response.result != kARDRegisterResultTypeSuccess) {
       NSLog(@"Failed to register with room server. Result:%d",
           (int)response.result);
@@ -579,6 +579,7 @@ static NSInteger kARDAppClientErrorInvalidRoom = -7;
     }
     ARDRegisterResponse *response =
         [ARDRegisterResponse responseFromJSONData:data];
+    //NSLog(@"Response after regisration:  %@", response.debugDescription);
     completionHandler(response);
   }];
 }

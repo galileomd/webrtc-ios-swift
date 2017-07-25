@@ -46,6 +46,7 @@ class RoomNameViewController: UIViewController {
             let webRTCVC: WebRTCViewController = segue.destination as! WebRTCViewController
             let data: String = sender as! String
             webRTCVC.roomName = data
+            NSLog(sender as! String)
         }
     }
 

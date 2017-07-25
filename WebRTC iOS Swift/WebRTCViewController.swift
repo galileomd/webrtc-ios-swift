@@ -23,10 +23,6 @@ import UIKit
 // The view controller that is displayed when WebRTC iOS Swift is loaded.
 class WebRTCViewController: UIViewController, ARDAppClientDelegate, RTCEAGLVideoViewDelegate {
     
-    
-    
-
-    
 
     @IBOutlet weak var remoteView: RTCEAGLVideoView!
     @IBOutlet weak var localView: RTCEAGLVideoView!
@@ -60,6 +56,13 @@ class WebRTCViewController: UIViewController, ARDAppClientDelegate, RTCEAGLVideo
     }
     
 //    MARK: RTCEAGLVideoViewDelegate
+    
+    //error
+    func appClient(_ client: ARDAppClient!, didError error: Error!) {
+        showAlertWithMessage(error.localizedDescription)
+        disconnect()
+    }
+    
     func appClient(_ client: ARDAppClient!, didChange state: ARDAppClientState) {
         switch state{
         case ARDAppClientState.connected:
@@ -86,13 +89,7 @@ class WebRTCViewController: UIViewController, ARDAppClientDelegate, RTCEAGLVideo
     
 //    MARK: RTCEAGLVideoViewDelegate
     
-//error
-    func appClient(_ client: ARDAppClient!, didError error: Error!) {
-        showAlertWithMessage(error.localizedDescription)
-        disconnect()
-    }
-    
-    
+
     func videoView(_ videoView: RTCEAGLVideoView!, didChangeVideoSize size: CGSize) {
 //        Resize localView or remoteView based on the size returned
     }
@@ -102,7 +99,7 @@ class WebRTCViewController: UIViewController, ARDAppClientDelegate, RTCEAGLVideo
     func initialize(){
         disconnect()
 //        Initializes the ARDAppClient with the delegate assignment
-        client = ARDAppClient.init(delegate: self)
+        client = ARDAppClient(delegate: self)
         
 //        RTCEAGLVideoViewDelegate provides notifications on video frame dimensions
         remoteView.delegate = self
@@ -110,7 +107,7 @@ class WebRTCViewController: UIViewController, ARDAppClientDelegate, RTCEAGLVideo
     }
     
     func connectToChatRoom(){
-        client?.serverHostUrl = "https://appr.tc"
+        //client?.serverHostUrl = "https://media.artinvest52.ru"
         client?.connectToRoom(withId: roomName, options: nil)
     }
     
