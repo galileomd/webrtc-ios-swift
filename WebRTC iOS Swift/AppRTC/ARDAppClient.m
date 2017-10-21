@@ -49,7 +49,7 @@
 
 // TODO(tkchin): move these to a configuration object.
 static NSString *kARDRoomServerHostUrl =
-    @"https://apprtc.appspot.com";
+    @"https://video.artinvest52.ru";
 static NSString *kARDRoomServerRegisterFormat =
     @"%@/join/%@";
 static NSString *kARDRoomServerMessageFormat =
@@ -61,8 +61,7 @@ static NSString *kARDDefaultSTUNServerUrl =
     @"stun:stun.l.google.com:19302";
 // TODO(tkchin): figure out a better username for CEOD statistics.
 static NSString *kARDTurnRequestUrl =
-    @"https://computeengineondemand.appspot.com"
-    @"/turn?username=iapprtc&key=4080218913";
+    @"turn:turn.artinvest52.ru";
 
 static NSString *kARDAppClientErrorDomain = @"ARDAppClient";
 static NSInteger kARDAppClientErrorUnknown = -1;
@@ -94,6 +93,7 @@ static NSInteger kARDAppClientErrorInvalidRoom = -7;
 @property(nonatomic, strong) RTCAudioTrack *defaultAudioTrack;
 @property(nonatomic, strong) RTCVideoTrack *defaultVideoTrack;
 
+
 @end
 
 @implementation ARDAppClient
@@ -114,6 +114,9 @@ static NSInteger kARDAppClientErrorInvalidRoom = -7;
 @synthesize iceServers = _iceServers;
 @synthesize webSocketURL = _websocketURL;
 @synthesize webSocketRestURL = _websocketRestURL;
+
+
+
 
 - (instancetype)initWithDelegate:(id<ARDAppClientDelegate>)delegate {
   if (self = [super init]) {
@@ -171,19 +174,32 @@ static NSInteger kARDAppClientErrorInvalidRoom = -7;
 
   // Request TURN.
   __weak ARDAppClient *weakSelf = self;
-  NSURL *turnRequestURL = [NSURL URLWithString:kARDTurnRequestUrl];
-  [self requestTURNServersWithURL:turnRequestURL
-                completionHandler:^(NSArray *turnServers) {
+    
+    //REQUST TURN NATIVE
+    
+//  NSURL *turnRequestURL = [NSURL URLWithString:kARDTurnRequestUrl];
+//  [self requestTURNServersWithURL:turnRequestURL
+//                completionHandler:^(NSArray *turnServers) {
+    
+    
     ARDAppClient *strongSelf = weakSelf;
-    [strongSelf.iceServers addObjectsFromArray:turnServers];
+                    
+                    NSMutableArray *turnArr = [NSMutableArray array];
+                    NSURL *turnUrl = [NSURL URLWithString:@"turn:turn.artinvest52.ru"];
+                    RTCICEServer *turnServ = [[RTCICEServer alloc] initWithURI: turnUrl username:@"admin" password:@"admin"];
+                    [turnArr addObject: turnServ];
+                    
+    [strongSelf.iceServers addObjectsFromArray:turnArr];
+                    NSLog(@"Turn Server:  %@", strongSelf.iceServers.description);
     strongSelf.isTurnComplete = YES;
     [strongSelf startSignalingIfReady];
-  }];
+    
+//  }];
 
   // Register with room server.
   [self registerWithRoomServerForRoomId:roomId
                       completionHandler:^(ARDRegisterResponse *response) {
-    ARDAppClient *strongSelf = weakSelf;
+    //ARDAppClient *strongSelf = weakSelf;
     if (!response || response.result != kARDRegisterResultTypeSuccess) {
       NSLog(@"Failed to register with room server. Result:%d",
           (int)response.result);
@@ -513,6 +529,9 @@ static NSInteger kARDAppClientErrorInvalidRoom = -7;
     return localStream;
 }
 
+
+//Request array TRUN from URL
+/*
 - (void)requestTURNServersWithURL:(NSURL *)requestURL
     completionHandler:(void (^)(NSArray *turnServers))completionHandler {
   NSParameterAssert([requestURL absoluteString].length);
@@ -537,6 +556,7 @@ static NSInteger kARDAppClientErrorInvalidRoom = -7;
     completionHandler(turnServers);
   }];
 }
+*/
 
 #pragma mark - Room server methods
 
@@ -559,6 +579,7 @@ static NSInteger kARDAppClientErrorInvalidRoom = -7;
     }
     ARDRegisterResponse *response =
         [ARDRegisterResponse responseFromJSONData:data];
+    //NSLog(@"Response after regisration:  %@", response.debugDescription);
     completionHandler(response);
   }];
 }
